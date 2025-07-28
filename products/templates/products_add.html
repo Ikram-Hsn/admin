@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}Add Product{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+<div class="page-header">
+    <h3 class="page-title">Add Product</h3>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="alert alert-info">
+      {% for category, message in messages %}
+        {{ message }}
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<form method="POST" action="{{ url_for('product_bp.product_add') }}" class="user-form">
+    <label>Name
+        <input type="text" name="name" required>
+    </label>
+    <label>Description
+        <input type="text" name="description">
+    </label>
+    <label>Price
+        <input type="text" name="price" required>
+    </label>
+    <label>Image URL
+        <input type="text" name="image_url">
+    </label>
+    <label>Quantity
+        <input type="number" name="quantity" min="0">
+    </label>
+    <button type="submit" class="btn-primary">Add Product</button>
+</form>
+{% endblock %}

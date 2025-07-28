@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block title %}Delete Product{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user_delete.css') }}">
+
+<div class="page-header">
+    <h3 class="page-title">Delete Product</h3>
+</div>
+
+<form action="{{ url_for('product_bp.product_delete', product_id=product.id) }}" method="post" class="user-form">
+    <label>Product Name
+        <input type="text" name="name" value="{{ product.name }}" disabled>
+    </label>
+
+    <label>Description
+        <input type="text" name="description" value="{{ product.description }}" disabled>
+    </label>
+
+    <label>Price
+        <input type="text" name="price" value="{{ product.price }}" disabled>
+    </label>
+
+    <label>Image URL
+        <input type="text" name="image_url" value="{{ product.image_url }}" disabled>
+    </label>
+
+    <label>Quantity
+        <input type="number" name="quantity" value="{{ product.quantity }}" disabled>
+    </label>
+
+    <!-- Flex container for buttons -->
+    <div style="display: flex; gap: 10px; margin-top: 1rem; margin-left: 70px;">
+        <button class="btn btn-danger submit-btn" type="submit">Delete Product</button>
+        <a href="{{ url_for('product_bp.product_list') }}" class="btn btn-secondary cancel-btn">Cancel</a>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,152 @@
+/* customer_delete.css */
+
+/* Make the body green and center everything */ 
+body {
+  background-color: #f4fbf6; /* soft green */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 500px;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Apply to the whole form container */
+.customer-form {
+  max-width: 320px;
+  width: 100%;
+  padding: 1.5rem;
+  background: #ffffff; /* white background */
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+  align-items: stretch;
+  margin-left: 350px;
+}
+
+/* Style each label to stack its text and input vertically */
+.customer-form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* Inputs and select styling */
+.customer-form input[type="text"],
+.customer-form input[type="email"],
+.customer-form select {
+  margin-top: 0.4rem;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.95rem;
+  border: 1.5px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+}
+
+.customer-form input[type="text"]:focus,
+.customer-form input[type="email"]:focus,
+.customer-form select:focus {
+  outline: none;
+  border-color: #05182d;
+  box-shadow: 0 0 5px rgba(0,123,255,0.3);
+}
+
+/* Checkbox label styling */
+.checkbox-label {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.checkbox-label input[type="checkbox"] {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+/* Green Button - full width same as form */
+.btn-primary {
+  background-color: #bbe8c5;
+  color: rgb(19, 19, 19);
+  border: none;
+  padding: 0.7rem 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 100%;
+  text-align: center;
+}
+
+.btn-primary:hover {
+  background-color: #32ee5b;
+  transform: scale(1.02);
+}
+
+/* Flash message styling */
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.alert-info {
+  background-color: #0ad2f6;
+  color: #0c5460;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Page header styling */
+.page-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.page-header h3 {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #122d4a;
+  margin: 0;
+}
+
+/* Flex layout for button group */
+.btn-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Cancel button style override */
+/* Cancel button style override */
+.cancel-btn {
+  background-color: #09c03a;
+  color: #f0f4f1;
+}
+
+.cancel-btn:hover {
+  background-color: #999;
+}
+

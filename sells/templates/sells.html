@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block title %}Sells{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Sells</h2>
+    <a href="{{ url_for('sell_bp.sell_add') }}" class="btn btn-success">+ Add</a>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!--  Sells Table -->
+  <div class="table-responsive mt-3">
+    <table id="myTable" class="table table-bordered display nowrap">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Customer</th>
+          <th>Product</th>
+          <th>Description</th>
+          <th>Quantity</th>
+          <th>Total Price</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sell in sells %}
+        <tr>
+          <td>{{ sell.id }}</td>
+          <td>{{ sell.customer.full_name if sell.customer else 'N/A' }}</td>
+          <td>{{ sell.product.name if sell.product else 'N/A' }}</td>
+          <td>{{ sell.description }}</td>
+          <td>{{ sell.quantity }}</td>
+          <td>${{ '%.2f'|format(sell.total_price) }}</td>
+          <td>
+                  <a href="{{ url_for('sell_bp.sell_edit', sell_id=sell.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                  <a href="{{ url_for('sell_bp.delete_sell', sell_id=sell.id) }}" class="btn btn-danger btn-sm">Delete</a>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="7" class="text-center">No sells found.</td>
+        </tr>
+        {% endfor %} 
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+  <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      $('#customer_id').select2();
+      new DataTable('#myTable', { responsive: true });
+
+      const productSelect = document.getElementById("product_id");
+      const descriptionInput = document.getElementById("description");
+      if (productSelect) {
+        productSelect.addEventListener("change", function () {
+          const selected = this.options[this.selectedIndex];
+          descriptionInput.value = selected.getAttribute("data-description") || '';
+        });
+      }
+
+      {% for sell in sells %}
+      const pSelect{{ sell.id }} = document.getElementById("product_id_{{ sell.id }}");
+      const dInput{{ sell.id }} = document.getElementById("description_{{ sell.id }}");
+      if (pSelect{{ sell.id }}) {
+        pSelect{{ sell.id }}.addEventListener("change", function () {
+          const selected = this.options[this.selectedIndex];
+          dInput{{ sell.id }}.value = selected.getAttribute("data-description") || '';
+        });
+      }
+      {% endfor %}
+    }); 
+  </script>
+{% endblock %}

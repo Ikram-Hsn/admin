@@ -1,0 +1,234 @@
+{% extends "layout.html" %}
+
+{% block title %}Products{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <h3 class="page-title">Product List</h3>
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">+ Add New Product</button>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} mt-2">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<!-- Product Table -->
+<div class="table-responsive mt-3">
+    <table id="productTable" class="table table-bordered display nowrap">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.description }}</td>
+                <td>${{ product.price }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>
+                    <button
+                      class="btn btn-sm btn-warning"
+                      data-bs-toggle="modal"
+                      data-bs-target="#editProductModal"
+                      data-id="{{ product.id }}"
+                      data-name="{{ product.name }}"
+                      data-description="{{ product.description }}"
+                      data-price="{{ product.price }}"
+                      data-quantity="{{ product.quantity }}"
+                    >Edit</button>
+
+                    <button
+                      class="btn btn-sm btn-danger"
+                      data-bs-toggle="modal"
+                      data-bs-target="#deleteProductModal"
+                      data-id="{{ product.id }}"
+                      data-name="{{ product.name }}"
+                      data-description="{{ product.description }}"
+                      data-price="{{ product.price }}"
+                      data-quantity="{{ product.quantity }}"
+                    >Delete</button>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="text-center">No products found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Add Product Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="{{ url_for('product_bp.product_list') }}" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="mb-3">
+              <label class="form-label">Name</label>
+              <input type="text" name="name" class="form-control" required>
+          </div>
+          <div class="mb-3">
+              <label class="form-label">Description</label>
+              <input type="text" name="description" class="form-control">
+          </div>
+          <div class="mb-3">
+              <label class="form-label">Price</label>
+              <input type="text" name="price" class="form-control" required>
+          </div>
+          <div class="mb-3">
+              <label class="form-label">Quantity</label>
+              <input type="number" name="quantity" class="form-control" min="0">
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Add Product</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Product Modal -->
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" id="editProductForm" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <input type="hidden" name="product_id" id="editProductId">
+          <div class="mb-3">
+              <label class="form-label">Name</label>
+              <input type="text" name="name" id="editProductName" class="form-control" required>
+          </div>
+          <div class="mb-3">
+              <label class="form-label">Description</label>
+              <input type="text" name="description" id="editProductDescription" class="form-control">
+          </div>
+          <div class="mb-3">
+              <label class="form-label">Price</label>
+              <input type="text" name="price" id="editProductPrice" class="form-control" required>
+          </div>
+          <div class="mb-3">
+              <label class="form-label">Quantity</label>
+              <input type="number" name="quantity" id="editProductQuantity" class="form-control" min="0">
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Update Product</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Product Modal -->
+<div class="modal fade" id="deleteProductModal" tabindex="-1" aria-labelledby="deleteProductModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" id="deleteProductForm" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteProductModalLabel">Delete Product</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="mb-3">
+              <label class="form-label">Name</label>
+              <input type="text" id="deleteProductNameInput" class="form-control" disabled>
+          </div>
+          <div class="mb-3">
+              <label class="form-label">Description</label>
+              <input type="text" id="deleteProductDescriptionInput" class="form-control" disabled>
+          </div>
+          <div class="mb-3">
+              <label class="form-label">Price</label>
+              <input type="text" id="deleteProductPriceInput" class="form-control" disabled>
+          </div>
+          <div class="mb-3">
+              <label class="form-label">Quantity</label>
+              <input type="number" id="deleteProductQuantityInput" class="form-control" disabled>
+          </div>
+          <p class="text-danger">Are you sure you want to delete this product?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-danger">Delete Product</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Initialize DataTable
+    let table = new DataTable('#productTable', {
+      responsive: true,
+      columnDefs: [{ targets: -1, orderable: false }]
+    });
+
+    // Edit modal fill
+    var editModal = document.getElementById('editProductModal');
+    editModal.addEventListener('show.bs.modal', function (event) {
+      var button = event.relatedTarget;
+      var id = button.getAttribute('data-id');
+      var name = button.getAttribute('data-name');
+      var description = button.getAttribute('data-description');
+      var price = button.getAttribute('data-price');
+      var quantity = button.getAttribute('data-quantity');
+
+      var form = document.getElementById('editProductForm');
+      form.action = '/product/edit/' + id;
+
+      document.getElementById('editProductId').value = id;
+      document.getElementById('editProductName').value = name;
+      document.getElementById('editProductDescription').value = description;
+      document.getElementById('editProductPrice').value = price;
+      document.getElementById('editProductQuantity').value = quantity;
+    });
+
+    // Delete modal fill
+    var deleteModal = document.getElementById('deleteProductModal');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+      var button = event.relatedTarget;
+      var id = button.getAttribute('data-id');
+      var name = button.getAttribute('data-name');
+      var description = button.getAttribute('data-description');
+      var price = button.getAttribute('data-price');
+      var quantity = button.getAttribute('data-quantity');
+
+      var form = document.getElementById('deleteProductForm');
+      form.action = '/product/delete/' + id;
+
+      document.getElementById('deleteProductNameInput').value = name;
+      document.getElementById('deleteProductDescriptionInput').value = description;
+      document.getElementById('deleteProductPriceInput').value = price;
+      document.getElementById('deleteProductQuantityInput').value = quantity;
+    });
+  });
+</script>
+{% endblock %}

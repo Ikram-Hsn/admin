@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}Create Customer{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/customer_add.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h3 class="page-title">Create Customer</h3>
+</div>
+
+<form action="{{ url_for('customer_bp.customer_add') }}" method="post" class="customer-form">
+    <label>Username
+        <input type="text" name="username" required>
+    </label>
+    <label>Full Name
+        <input type="text" name="full_name" required>
+    </label>
+    <label>Email
+        <input type="email" name="email" required>
+    </label>
+    <label>User Type
+        <select name="user_type" required>
+            <option value="Admin">Admin</option>
+            <option value="Normal">customer</option>
+        </select>
+    </label>
+    <label class="checkbox-label">
+        <input type="checkbox" name="is_active" value="1" checked> Active
+    </label>
+    <button type="submit" class="btn-primary">Create Customer</button>
+</form>
+{% endblock %}

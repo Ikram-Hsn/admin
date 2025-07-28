@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block title %}Edit Customer{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/customer_edit.css') }}">
+
+<div class="page-header">
+    <h3 class="page-title">Edit Customer</h3>
+</div>
+
+<form action="{{ url_for('customer_bp.customer_edit', customer_id=customer.id) }}" method="post" class="customer-form">
+    <label>Username
+        <input type="text" name="username" value="{{ customer.username }}" required>
+    </label>
+
+    <label>Full Name
+        <input type="text" name="full_name" value="{{ customer.full_name }}" required>
+    </label>
+
+    <label>Email
+        <input type="email" name="email" value="{{ customer.email }}" required>
+    </label>
+
+    <label>User Type
+        <select name="user_type" required>
+            <option value="admin" {% if customer.user_type == 'admin' %}selected{% endif %}>Admin</option>
+            <option value="staff" {% if customer.user_type == 'staff' %}selected{% endif %}>Staff</option>
+            <option value="viewer" {% if customer.user_type == 'viewer' %}selected{% endif %}>Viewer</option>
+        </select>
+    </label>
+
+    <label class="checkbox-label">
+        <input type="checkbox" name="is_active" {% if customer.is_active %}checked{% endif %}>
+        Active
+    </label>
+
+    <button class="btn btn-primary" type="submit">Update Customer</button>
+</form>
+{% endblock %}

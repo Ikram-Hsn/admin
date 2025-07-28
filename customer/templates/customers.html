@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block title %}Customer List{% endblock %}
+
+{% block extra_css %}
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+    <h3 class="page-title">Customer</h3>
+    <a href="{{ url_for('customer_bp.customer_add') }}" class="btn btn-success">+ Add Customer</a>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}" role="alert">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div class="table-responsive mt-3">
+    <table id="myTable" class="table table-bordered display nowrap">
+       <thead>
+          <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Full Name</th>
+              <th>Email</th>
+              <th>User Type</th>
+              <th>Status</th>
+              <th>Actions</th>
+          </tr>
+       </thead>
+       <tbody>
+          {% for customer in customers %}
+          <tr>
+              <td>{{ customer.id }}</td>
+              <td>{{ customer.username }}</td>
+              <td>{{ customer.full_name }}</td>
+              <td>{{ customer.email }}</td>
+              <td>{{ customer.user_type }}</td>
+              <td>
+                {% if customer.is_active %}
+                  <span class="badge bg-success">Active</span>
+                {% else %}
+                  <span class="badge bg-secondary">Inactive</span>
+                {% endif %}
+              </td>
+              <td>
+                  <a href="{{ url_for('customer_bp.customer_edit', customer_id=customer.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                  <a href="{{ url_for('customer_bp.customer_delete', customer_id=customer.id) }}" class="btn btn-sm btn-danger">Delete</a>
+              </td>
+          </tr>
+          {% else %}
+          <tr>
+              <td colspan="7" class="text-center">No customers found.</td>
+          </tr>
+          {% endfor %}
+       </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let table = new DataTable('#myTable', {
+      responsive: true,
+      columnDefs: [
+        { targets: -1, orderable: false } // disable sorting on the Actions column
+      ]
+    });
+  });
+</script>
+{% endblock %}

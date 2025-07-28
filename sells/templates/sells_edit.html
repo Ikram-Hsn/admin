@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+
+{% block title %}Edit Sell{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="w-100" style="max-width: 600px;">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} mt-2">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="card shadow">
+      <div class="card-header text-center">
+        <h4>Edit Sell</h4>
+      </div>
+      <div class="card-body">
+        <form method="POST" action="{{ url_for('sell_bp.sell_edit', sell_id=sell.id) }}">
+          <div class="mb-3">
+            <label class="form-label">Customer</label>
+            <select name="customer_id" id="customer_id" class="form-select" required>
+              <option value="" disabled>Select Customer</option>
+              {% for customer in customers %}
+                <option value="{{ customer.id }}" {% if customer.id == sell.customer_id %}selected{% endif %}>
+                  {{ customer.full_name }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Product</label>
+            <select id="product_id" name="product_id" class="form-select" required>
+              <option value="" disabled>Select Product</option>
+              {% for product in products %}
+                <option value="{{ product.id }}" data-description="{{ product.description }}"
+                  {% if product.id == sell.product_id %}selected{% endif %}>
+                  {{ product.name }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <input type="text" id="description" name="description" class="form-control" value="{{ sell.description }}" readonly>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Quantity</label>
+            <input type="number" name="quantity" class="form-control" value="{{ sell.quantity }}" min="1" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Total Price</label>
+            <input type="number" name="total_price" class="form-control" value="{{ sell.total_price }}" min="0" step="0.01" required>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary">Update Sell</button>
+            <a href="{{ url_for('sell_bp.sell_list') }}" class="btn btn-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const productSelect = document.getElementById("product_id");
+    const descriptionInput = document.getElementById("description");
+
+    if (productSelect && descriptionInput) {
+      productSelect.addEventListener("change", function () {
+        const selected = this.options[this.selectedIndex];
+        const desc = selected.getAttribute("data-description") || '';
+        descriptionInput.value = desc;
+      });
+    }
+  });
+</script>
+{% endblock %}

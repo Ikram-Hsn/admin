@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block title %}Delete Customer{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/customer_delete.css') }}">
+
+<div class="page-header">
+    <h3 class="page-title">Delete Customer</h3>
+</div>
+
+<form action="{{ url_for('customer_bp.customer_delete', customer_id=customer.id) }}" method="post" class="customer-form">
+    <label>Username
+        <input type="text" value="{{ customer.username }}" disabled>
+    </label>
+
+    <label>Full Name
+        <input type="text" value="{{ customer.full_name }}" disabled>
+    </label>
+
+    <label>Email
+        <input type="email" value="{{ customer.email }}" disabled>
+    </label>
+
+    <label>User Type
+        <input type="text" value="{{ customer.user_type }}" disabled>
+    </label>
+
+    <label class="checkbox-label">
+        <input type="checkbox" {% if customer.is_active %}checked{% endif %} disabled>
+        Active
+    </label>
+
+    <div style="display: flex; gap: 10px; margin-top: 1rem; margin-left: 70px;">
+        <button class="btn btn-danger" type="submit">Delete Customer</button>
+        <a href="{{ url_for('customer_bp.customer_list') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}
